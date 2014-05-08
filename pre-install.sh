@@ -18,7 +18,7 @@ touch /etc/sysconfig/network
 /usr/bin/yum clean all
 /usr/bin/yum update -q -y --nogpgcheck
 /usr/bin/yum install -y --nogpgcheck git which pwgen \
-httpd mod_ssl mysql mysql-server \
+httpd mod_ssl mysql-server \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
 
@@ -43,8 +43,8 @@ ARCH="$(arch)"
 ##TO DO.  Also add SSL case for custom SSL certs if provided. ##
 
 # Setup MySQL
-/usr/bin/mysqld_safe &
-sleep 10
+/bin/chown -R mysql.mysql /var/lib/mysql
+mysql_install_db --user=mysql
 
 # Customizable database credentails:
 DB_USER="drupal"

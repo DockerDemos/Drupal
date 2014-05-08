@@ -37,6 +37,13 @@ To make your site available to the public on port 80 and 443 of your host system
 
 The site will now be availble as a normal website if you browse to the domain name or IP of your host system.  (Make sure your host system's firewalls are open on ports 80 and 443 accordingly.)
 
+##Known Issues##
+
+* APC upload progress not enabled (add apc.rfc1867 = 1 to apc.ini file)
+* sites/default/files not writable
+* HTTP request status broken (network issues inside of container?)
+* Cron not installed; configured for Drupal
+
 ##Acknowledgements##
 
 Thanks to:

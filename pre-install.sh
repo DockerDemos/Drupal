@@ -1,14 +1,8 @@
 #!/bin/bash
 
-# Customizable database credentails:
-DB_USER="drupal"
-DB_PASS="$(pwgen -c -n -1 12)"
-DB_HOST="localhost"
-DB_NAME="drupal"
-
 /usr/bin/yum clean all
 /usr/bin/yum update -q -y --nogpgcheck
-/usr/bin/yum install -y --nogpgcheck git which \
+/usr/bin/yum install -y --nogpgcheck git which pwgen\
 httpd mod_ssl mysql \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
@@ -34,22 +28,26 @@ ARCH="$(arch)"
 ##TO DO.  Also add SSL case for custom SSL certs if provided. ##
 
 # Setup MySQL
+# Customizable database credentails:
+DB_USER="drupal"
+DB_PASS="$(pwgen -c -n -1 12)"
+DB_HOST="localhost"
+DB_NAME="drupal"
 MYSQL_ROOT_PASS="$(pwgen -c -n -1 12)"
 
 cat << EOF > /root/.my.cnf
 [mysqladmin]
 user            = root
-password        = $mysqlrootpw
+password        = $MYSQL_ROOT_PASS
 
 [client]
 user            = root
-password        = $mysqlrootpw
+password        = $MYSQL_ROOT_PASS
 protocol        = TCP
 EOF
 
 mysqladmin -uroot password $MYSQL_ROOT_PASS
 mysql -u root -p$MYSQL_ROOT_PASS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO \"$DB_USER\"@\"$DB_HOST\" IDENTIFIED BY "$DB_PASS"; FLUSH PRIVILEGES;"
-killall mysqld
 
 ## TO DO: Setup PHP-FPM ##
 

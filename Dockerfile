@@ -10,6 +10,8 @@ MAINTAINER Chris Collins <collins.christopher@gmail.com>
 ADD pre-install.sh /pre-install.sh
 RUN /pre-install.sh
 
+ADD httpd.conf /etc/httpd/conf/httpd.conf
+
 EXPOSE 80 
 EXPOSE 443 
 

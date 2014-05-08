@@ -11,9 +11,7 @@ Updated: 2014-05-08
 
 ##Caution##
 
-This Docker Container is still being configured.  It will not work as-is.  
-
-This container is a DEMO of the Drupal software.  Updating Drupal inside a running container is likely to be a challenging process.  Backing up your data will also be somewhat difficult.  Use this at your own risk, and do not use it in a production setup unless you're VERY familiar with both Docker and Drupal.
+This Docker Container is still being developed.  It will work, however, even when it's reached a stable state, this container is a DEMO of the Drupal software.  Updating Drupal inside a running container is likely to be a challenging process.  Backing up your data will also be somewhat difficult.  Use this at your own risk, and do not use it in a production setup unless you're VERY familiar with both Docker and Drupal.
 
 ##Building and Running##
 

@@ -1,9 +1,24 @@
 #!/bin/bash
 
+# Epel repo for pwgen
+/bin/cat << EOF > /etc/yum.repos.d/epel.repo
+[epel]
+name=Extra Packages for Enterprise Linux 6 - \$basearch
+#baseurl=http://download.fedoraproject.org/pub/epel/6/\$basearch
+mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-6&arch=\$basearch
+failovermethod=priority
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+EOF
+
+# PHP-FPM Expects this
+touch /etc/sysconfig/network
+
 /usr/bin/yum clean all
 /usr/bin/yum update -q -y --nogpgcheck
-/usr/bin/yum install -y --nogpgcheck git which pwgen\
-httpd mod_ssl mysql \
+/usr/bin/yum install -y --nogpgcheck git which pwgen \
+httpd mod_ssl mysql mysql-server \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
 
@@ -28,6 +43,9 @@ ARCH="$(arch)"
 ##TO DO.  Also add SSL case for custom SSL certs if provided. ##
 
 # Setup MySQL
+/usr/bin/mysqld_safe &
+sleep 10
+
 # Customizable database credentails:
 DB_USER="drupal"
 DB_PASS="$(pwgen -c -n -1 12)"
@@ -53,7 +71,7 @@ mysql -u root -p$MYSQL_ROOT_PASS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILE
 
 # Setup the init system
 /bin/mkdir -p /etc/service/httpd
-/bin/mkdir -p /etc/service/mysql
+/bin/mkdir -p /etc/service/mysqld
 /bin/mkdir -p /etc/service/php-fpm
 
 /bin/cat << EOF > /etc/service/httpd/run

@@ -30,8 +30,8 @@ ARCH="$(arch)"
 /usr/sbin/useradd $RPMUSER
 
 /bin/mkdir -p $RPMHOME/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-/bin/chown -R $RPMUSER $RPMHOME 
 /bin/echo '%_topdir %(echo $HOME)/rpmbuild' > $RPMHOME/.rpmmacros 
+/bin/chown -R $RPMUSER $RPMHOME 
 
 /bin/su -c '/usr/bin/git clone https://github.com/imeyer/runit-rpm.git' - rpmbuilder
 /bin/su -c '/home/rpmbuilder/runit-rpm/build.sh' - rpmbuilder
@@ -45,6 +45,9 @@ ARCH="$(arch)"
 # Setup MySQL
 /bin/chown -R mysql.mysql /var/lib/mysql
 mysql_install_db --user=mysql
+
+/usr/bin/mysqld_safe &
+sleep 5
 
 # Customizable database credentails:
 DB_USER="drupal"
@@ -65,7 +68,7 @@ protocol        = TCP
 EOF
 
 mysqladmin -uroot password $MYSQL_ROOT_PASS
-mysql -u root -p$MYSQL_ROOT_PASS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO \"$DB_USER\"@\"$DB_HOST\" IDENTIFIED BY "$DB_PASS"; FLUSH PRIVILEGES;"
+mysql -u root -p$MYSQL_ROOT_PASS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO \"$DB_USER\"@\"$DB_HOST\" IDENTIFIED BY \"$DB_PASS\"; FLUSH PRIVILEGES;"
 
 ## TO DO: Setup PHP-FPM ##
 

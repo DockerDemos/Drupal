@@ -11,7 +11,7 @@ ADD pre-install.sh /pre-install.sh
 ADD startup.sh /startup.sh
 ADD httpd.conf /etc/httpd/conf/httpd.conf
 ADD ssl.conf /etc/httpd/conf.d/ssl.conf
-ADD certs/* /certs/
+ADD certs/ /certs/
 
 RUN /pre-install.sh
 

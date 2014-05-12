@@ -17,7 +17,7 @@ if [ ! -f "/var/www/html/sites/default/settings.php" ] ; then
   mysql --defaults-extra-file=$DB_DEFAULTS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO \"$DB_USER\"@\"$DB_HOST\" IDENTIFIED BY \"$DB_PASS\"; FLUSH PRIVILEGES;"
 
   /bin/echo "Drush installing Drupal"
-  yes | drush site-install --db-url="$(cat $DB_FILE)" -r /var/www/html
+  yes | drush site-install --db-url="$DB_URL" -r /var/www/html
 
   /bin/echo "0 * * * * /usr/bin/php /var/www/html/cron.php" >> /etc/cron.d/drupal.cron
 

@@ -7,7 +7,7 @@ Docker container for a push-button Drupal website
 
 Maintainer: Chris Collins \<collins.christopher@gmail.com\>
 
-Updated: 2014-05-08
+Updated: 2014-05-12
 
 ##Caution##
 

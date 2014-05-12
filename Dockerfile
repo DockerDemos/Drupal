@@ -10,6 +10,8 @@ MAINTAINER Chris Collins <collins.christopher@gmail.com>
 ADD pre-install.sh /pre-install.sh
 RUN /pre-install.sh
 
+ADD startup.sh /startup.sh
+
 ADD httpd.conf /etc/httpd/conf/httpd.conf
 
 EXPOSE 80 

@@ -17,7 +17,7 @@ touch /etc/sysconfig/network
 
 /usr/bin/yum clean all
 /usr/bin/yum update -q -y --nogpgcheck
-/usr/bin/yum install -y --nogpgcheck git which pwgen \
+/usr/bin/yum install -y --nogpgcheck git which pwgen cron\
 httpd mod_ssl mysql-server \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
@@ -71,6 +71,8 @@ mysqladmin -uroot password $MYSQL_ROOT_PASS
 mysql -u root -p$MYSQL_ROOT_PASS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO \"$DB_USER\"@\"$DB_HOST\" IDENTIFIED BY \"$DB_PASS\"; FLUSH PRIVILEGES;"
 
 ## TO DO: Setup PHP-FPM ##
+
+
 
 # Setup the init system
 /bin/mkdir -p /etc/service/httpd
@@ -129,6 +131,9 @@ DRUSH="https://github.com/drush-ops/drush/archive/master.tar.gz"
 COMPOSER="https://getcomposer.org/installer"
 DB_URL="mysql://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
 
+/bin/echo "Creating DB file for later Drush install"
+/bin/echo $DB_URL >> /db_file.txt
+
 /bin/echo "Downloading Drupal to /var/www/html"
 /bin/chmod 755 /var/www/html
 /usr/bin/git clone http://git.drupal.org/project/drupal.git /var/www/html
@@ -152,6 +157,5 @@ cd /drush
 composer install
 composer global require drush/drush:6.*
 
-/bin/echo "Drush installing Drupal"
-yes | drush site-install --db-url="$DB_URL" -r /var/www/html
+/bin/echo "Pre-install complete"
 

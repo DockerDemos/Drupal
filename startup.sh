@@ -26,6 +26,8 @@ if [ ! -f "/var/www/html/sites/default/settings.php" ] ; then
   sleep 10
 fi
 
+# Setting file permissions
+/bin/chown -R apache /var/www/html/
 
 
 /bin/echo "Starting init system"

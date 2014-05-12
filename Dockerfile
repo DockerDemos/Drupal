@@ -15,4 +15,4 @@ ADD httpd.conf /etc/httpd/conf/httpd.conf
 EXPOSE 80 
 EXPOSE 443 
 
-CMD ["/sbin/runsvdir-start"]
+ENTRYPOINT  ["/bin/bash", "/startup.sh"]

@@ -19,8 +19,6 @@ if [ ! -f "/var/www/html/sites/default/settings.php" ] ; then
   /bin/echo "Drush installing Drupal"
   yes | drush site-install --db-url="$DB_URL" -r /var/www/html
 
-  /bin/echo "0 * * * * /usr/bin/php /var/www/html/cron.php" >> /etc/cron.d/drupal.cron
-
   # Stop the rogue MySQL instance so we can run it with a supervisor
   /bin/kill -15 `cat /var/run/mysqld/mysqld.pid`
   sleep 10

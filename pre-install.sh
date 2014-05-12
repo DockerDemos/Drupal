@@ -49,11 +49,6 @@ mysql_install_db --user=mysql
 /usr/bin/mysqld_safe &
 sleep 5
 
-# Customizable database credentails:
-DB_USER="drupal"
-DB_PASS="$(pwgen -c -n -1 12)"
-DB_HOST="localhost"
-DB_NAME="drupal"
 MYSQL_ROOT_PASS="$(pwgen -c -n -1 12)"
 
 cat << EOF > /root/.my.cnf
@@ -68,7 +63,6 @@ protocol        = TCP
 EOF
 
 mysqladmin -uroot password $MYSQL_ROOT_PASS
-mysql -u root -p$MYSQL_ROOT_PASS -e "CREATE DATABASE $DB_NAME; GRANT ALL PRIVILEGES ON $DB_NAME.* TO \"$DB_USER\"@\"$DB_HOST\" IDENTIFIED BY \"$DB_PASS\"; FLUSH PRIVILEGES;"
 
 ## TO DO: Setup PHP-FPM ##
 
@@ -129,10 +123,6 @@ EOF
 # Install Drupal
 DRUSH="https://github.com/drush-ops/drush/archive/master.tar.gz"
 COMPOSER="https://getcomposer.org/installer"
-DB_URL="mysql://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
-
-/bin/echo "Creating DB file for later Drush install"
-/bin/echo $DB_URL >> /db_file.txt
 
 /bin/echo "Downloading Drupal to /var/www/html"
 /bin/chmod 755 /var/www/html
@@ -156,6 +146,9 @@ cd /
 cd /drush
 composer install
 composer global require drush/drush:6.*
+
+/bin/kill -15 `cat /var/run/mysqld/mysqld.pid`
+sleep 10
 
 /bin/echo "Pre-install complete"
 

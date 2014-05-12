@@ -17,4 +17,4 @@ ADD httpd.conf /etc/httpd/conf/httpd.conf
 EXPOSE 80 
 EXPOSE 443 
 
-ENTRYPOINT  ["/bin/bash", "/startup.sh"]
+CMD ["/bin/bash", "/startup.sh"]

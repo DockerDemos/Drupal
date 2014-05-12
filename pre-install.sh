@@ -66,6 +66,9 @@ mysqladmin -uroot password $MYSQL_ROOT_PASS
 
 ## TO DO: Setup PHP-FPM ##
 
+/bin/echo "apc.rfc1867 = 1" >> /etc/php.d/apc.ini
+
+
 
 
 # Setup the init system

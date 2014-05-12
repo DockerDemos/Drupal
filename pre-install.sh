@@ -16,7 +16,7 @@ EOF
 touch /etc/sysconfig/network
 
 /usr/bin/yum clean all
-/usr/bin/yum update -q -y --nogpgcheck
+/usr/bin/yum update -y --nogpgcheck
 /usr/bin/yum install -y --nogpgcheck git which pwgen cronie\
 httpd mod_ssl mysql-server \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \

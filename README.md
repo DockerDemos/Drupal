@@ -39,10 +39,7 @@ The site will now be availble as a normal website if you browse to the domain na
 
 ##Known Issues##
 
-* APC upload progress not enabled (add apc.rfc1867 = 1 to apc.ini file)
-* sites/default/files not writable
-* HTTP request status broken (network issues inside of container?)
-* Cron not installed; configured for Drupal
+Tracked on Github: [https://github.com/DockerDemos/Drupal/issues](https://github.com/DockerDemos/Drupal/issues)
 
 ##Acknowledgements##
 

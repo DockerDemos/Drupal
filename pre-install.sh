@@ -39,7 +39,47 @@ ARCH="$(arch)"
 
 # Setup Apache
 
-##TO DO.  Also add SSL case for custom SSL certs if provided. ##
+/bin/cat << EOF > /etc/httpd/conf.d/site.conf
+<VirtualHost *:80>
+
+  DocumentRoot "/var/www/html"
+
+  <Directory "/var/www/html">
+    Options FollowSymlinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  ErrorLog logs/error_log
+  CustomLog logs/access_log combined
+
+</VirtualHost>
+EOF
+
+if [[ -f /certs/localhost.crt ]] ; then
+  /bin/echo "Certificate exists in /certs - setting up SSL"
+  /bin/cat << EOF > /etc/httpd/conf.d/site-ssl.conf
+<VirtualHost *:443>
+
+  DocumentRoot "/var/www/html"
+
+  <Directory "/var/www/html">
+    Options FollowSymlinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  SSLEngine on
+  SSLCertificateKeyFile /certs/localhost.key
+  SSLCertificateFile    /certs/localhost.crt
+
+  ErrorLog logs/ssl_error_log
+  CustomLog logs/ssl_access_log combined
+
+</VirtualHost>
+EOF  
 
 # Setup MySQL
 /bin/chown -R mysql.mysql /var/lib/mysql

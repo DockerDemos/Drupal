@@ -16,7 +16,7 @@ EOF
 touch /etc/sysconfig/network
 
 /usr/bin/yum clean all
-/usr/bin/yum install -y --nogpgcheck git which pwgen cronie \
+/usr/bin/yum install -y --nogpgcheck git which pwgen cronie tar \
 httpd mod_ssl mysql-server \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static

@@ -74,32 +74,32 @@ if [[ -f /certs/localhost.crt ]] ; then
   SSLCONF='/etc/httpd/conf.d/ssl.conf'
   SSLPROTO='SSLProtocol all -SSLv2 -SSLv3'
   SSLHONOR='SSLHonorCipherOrder on'
-  SSLCIPHER='SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:AES128:AES256:RC4-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!3DES:!MD5:!PSK"'
+  SSLCIPHER='SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:AES128:AES256:RC4-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!3DES:!MD5:!PSK'
 
   /bin/sed -i "/SSLProtocol all -SSLv2/c\\$SSLPROTO\n$SSLHONOR" $SSLCONF
   /bin/sed -i "/SSLCipherSuite ALL/c\\$SSLCIPHER" $SSLCONF
 
-#  /bin/cat << EOF > /etc/httpd/conf.d/site-ssl.conf
-#<VirtualHost *:443>
-#
-#  DocumentRoot "/var/www/html"
-#
-#  <Directory "/var/www/html">
-#    Options FollowSymlinks
-#    AllowOverride All
-#    Order allow,deny
-#    Allow from all
-#  </Directory>
-#
-#  SSLEngine on
-#  SSLCertificateKeyFile /certs/localhost.key
-#  SSLCertificateFile    /certs/localhost.crt
-#
-#  ErrorLog logs/ssl_error_log
-#  CustomLog logs/ssl_access_log combined
-#
-#</VirtualHost>
-#EOF
+  /bin/cat << EOF > /etc/httpd/conf.d/site-ssl.conf
+<VirtualHost *:443>
+
+  DocumentRoot "/var/www/html"
+
+  <Directory "/var/www/html">
+    Options FollowSymlinks
+    AllowOverride All
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  SSLEngine on
+  SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+  SSLCertificateFile    /etc/pki/tls/certs/localhost.crt
+
+  ErrorLog logs/ssl_error_log
+  CustomLog logs/ssl_access_log combined
+
+</VirtualHost>
+EOF
 fi
 
 # Setup MySQL

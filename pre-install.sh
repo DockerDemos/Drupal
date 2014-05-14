@@ -79,7 +79,7 @@ if [[ -f /certs/localhost.crt ]] ; then
   CustomLog logs/ssl_access_log combined
 
 </VirtualHost>
-EOF  
+EOF
 fi
 
 # Setup MySQL

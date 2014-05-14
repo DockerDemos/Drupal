@@ -39,6 +39,14 @@ ARCH="$(arch)"
 
 # Setup Apache
 
+/bin/sed -i 's/ServerTokens\ OS/ServerTokens\ ProductOnly/' /etc/httpd/conf/httpd.conf
+/bin/sed -i 's/Timeout\ 60/Timeout\ 120/' /etc/httpd/conf/httpd.conf
+/bin/sed -i 's/ServerSignature\ On/ServerSignature\ Off/' /etc/httpd/conf/httpd.conf
+
+/bin/echo "AliasMatch \.svn /non-existant-page" >> /etc/httpd/conf/httpd.conf
+/bin/echo "AliasMatch \.git /non-existant-page" >> /etc/httpd/conf/httpd.conf
+/bin/echo "TraceEnable Off" >> /etc/httpd/conf/httpd.conf
+
 /bin/cat << EOF > /etc/httpd/conf.d/site.conf
 <VirtualHost *:80>
 

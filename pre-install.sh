@@ -33,19 +33,20 @@ ARCH="$(arch)"
 /bin/chown -R $RPMUSER $RPMHOME 
 
 /bin/su -c '/usr/bin/git clone https://github.com/imeyer/runit-rpm.git' - rpmbuilder
-/bin/su -c '/home/rpmbuilder/runit-rpm/build.sh' - rpmbuilder
+/bin/su -c '/home/rpmbuilder/runit-rpm/build.sh 1>/dev/null' - rpmbuilder
 
 /usr/bin/yum install -y /home/rpmbuilder/rpmbuild/RPMS/$ARCH/runit-2.1.1-6.el6.$ARCH.rpm
 
 # Setup Apache
+CONF='/etc/httpd/conf/httpd.conf'
 
-/bin/sed -i 's/ServerTokens\ OS/ServerTokens\ ProductOnly/' /etc/httpd/conf/httpd.conf
-/bin/sed -i 's/Timeout\ 60/Timeout\ 120/' /etc/httpd/conf/httpd.conf
-/bin/sed -i 's/ServerSignature\ On/ServerSignature\ Off/' /etc/httpd/conf/httpd.conf
+/bin/sed -i '/ServerTokens OS/c\ServerTokens ProductOnly' $CONF 
+/bin/sed -i '/Timeout 60/c\Timeout 120' $CONF
+/bin/sed -i '/ServerSignature On/c\ServerSignature Off' $CONF
 
-/bin/echo "AliasMatch \.svn /non-existant-page" >> /etc/httpd/conf/httpd.conf
-/bin/echo "AliasMatch \.git /non-existant-page" >> /etc/httpd/conf/httpd.conf
-/bin/echo "TraceEnable Off" >> /etc/httpd/conf/httpd.conf
+/bin/echo "AliasMatch \.svn /non-existant-page" >> $CONF
+/bin/echo "AliasMatch \.git /non-existant-page" >> $CONF
+/bin/echo "TraceEnable Off" >> $CONF
 
 /bin/cat << EOF > /etc/httpd/conf.d/site.conf
 <VirtualHost *:80>
@@ -67,27 +68,38 @@ EOF
 
 if [[ -f /certs/localhost.crt ]] ; then
   /bin/echo "Certificate exists in /certs - setting up SSL"
-  /bin/cat << EOF > /etc/httpd/conf.d/site-ssl.conf
-<VirtualHost *:443>
+  /bin/cp /certs/localhost.key /etc/pki/tls/private/
+  /bin/cp /certs/localhost.crt /etc/pki/tls/certs/
 
-  DocumentRoot "/var/www/html"
+  SSLCONF='/etc/httpd/conf.d/ssl.conf'
+  SSLPROTO='SSLProtocol all -SSLv2 -SSLv3'
+  SSLHONOR='SSLHonorCipherOrder on'
+  SSLCIPHER='SSLCipherSuite ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:AES128:AES256:RC4-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!3DES:!MD5:!PSK"'
 
-  <Directory "/var/www/html">
-    Options FollowSymlinks
-    AllowOverride All
-    Order allow,deny
-    Allow from all
-  </Directory>
+  /bin/sed -i "/SSLProtocol all -SSLv2/c\\$SSLPROTO\n$SSLHONOR" $SSLCONF
+  /bin/sed -i "/SSLCipherSuite ALL/c\\$SSLCIPHER" $SSLCONF
 
-  SSLEngine on
-  SSLCertificateKeyFile /certs/localhost.key
-  SSLCertificateFile    /certs/localhost.crt
-
-  ErrorLog logs/ssl_error_log
-  CustomLog logs/ssl_access_log combined
-
-</VirtualHost>
-EOF
+#  /bin/cat << EOF > /etc/httpd/conf.d/site-ssl.conf
+#<VirtualHost *:443>
+#
+#  DocumentRoot "/var/www/html"
+#
+#  <Directory "/var/www/html">
+#    Options FollowSymlinks
+#    AllowOverride All
+#    Order allow,deny
+#    Allow from all
+#  </Directory>
+#
+#  SSLEngine on
+#  SSLCertificateKeyFile /certs/localhost.key
+#  SSLCertificateFile    /certs/localhost.crt
+#
+#  ErrorLog logs/ssl_error_log
+#  CustomLog logs/ssl_access_log combined
+#
+#</VirtualHost>
+#EOF
 fi
 
 # Setup MySQL

@@ -28,6 +28,7 @@ Once it finishes building, you can run the container with:
 Then, open your browser and navigate to [http://localhost:8080](http://localhost:8080) to your new site.
 
 To get your Drupal admin password, run:
+
 `docker logs container_name`, where "container_name" is the Docker container ID or short name. The admin password will be printed visible on the terminal screen.
 
 To improve startup speed, this image will not update with the latest version of the Drupal software automatically once the initial image is built.  When a new update is released, run the `docker build` command from above to get the newest version.

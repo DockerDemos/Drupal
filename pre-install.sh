@@ -80,6 +80,7 @@ if [[ -f /certs/localhost.crt ]] ; then
 
 </VirtualHost>
 EOF  
+fi
 
 # Setup MySQL
 /bin/chown -R mysql.mysql /var/lib/mysql

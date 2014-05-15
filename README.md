@@ -19,11 +19,11 @@ This is a [Docker](http://docker.io) container image.  You need to have Docker i
 
 To build the image, change directories into the root of this repository, and run:
 
-`docker build -t Drupal .`  <-- note the period on the end
+`docker build -t drupal .`  <-- note the period on the end
 
 Once it finishes building, you can run the container with:
 
-`docker run -i -t -d -p 8080:80 Drupal`
+`docker run -i -t -d -p 8080:80 drupal`
 
 Then, open your browser and navigate to [http://localhost:8080](http://localhost:8080) to your new site.
 
@@ -37,7 +37,7 @@ To improve startup speed, this image will not update with the latest version of 
 
 To make your site available to the public on port 80 and 443 of your host system, use the following `docker run` command instead of the one above:
 
-`docker run -i -t -d -p 80:80 -p 443:443 Drupal`
+`docker run -i -t -d -p 80:80 -p 443:443 drupal`
 
 The site will now be availble as a normal website if you browse to the domain name or IP of your host system.  (Make sure your host system's firewalls are open on ports 80 and 443 accordingly.)
 

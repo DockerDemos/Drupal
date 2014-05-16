@@ -29,8 +29,8 @@ ARCH="$(arch)"
 /usr/sbin/useradd $RPMUSER
 
 /bin/mkdir -p $RPMHOME/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-/bin/echo '%_topdir %(echo $HOME)/rpmbuild' > $RPMHOME/.rpmmacros 
-/bin/chown -R $RPMUSER $RPMHOME 
+/bin/echo '%_topdir %(echo $HOME)/rpmbuild' > $RPMHOME/.rpmmacros
+/bin/chown -R $RPMUSER $RPMHOME
 
 /bin/su -c '/usr/bin/git clone https://github.com/imeyer/runit-rpm.git' - rpmbuilder
 /bin/su -c '/home/rpmbuilder/runit-rpm/build.sh 1>/dev/null' - rpmbuilder
@@ -40,7 +40,7 @@ ARCH="$(arch)"
 # Setup Apache
 CONF='/etc/httpd/conf/httpd.conf'
 
-/bin/sed -i '/ServerTokens OS/c\ServerTokens ProductOnly' $CONF 
+/bin/sed -i '/ServerTokens OS/c\ServerTokens ProductOnly' $CONF
 /bin/sed -i '/Timeout 60/c\Timeout 120' $CONF
 /bin/sed -i '/ServerSignature On/c\ServerSignature Off' $CONF
 
@@ -81,23 +81,23 @@ if [[ -f /certs/localhost.crt ]] ; then
 
   /bin/cat <<- EOF > /etc/httpd/conf.d/site-ssl.conf
   <VirtualHost *:443>
-  
+
     DocumentRoot "/var/www/html"
-  
+
     <Directory "/var/www/html">
       Options FollowSymlinks
       AllowOverride All
       Order allow,deny
       Allow from all
     </Directory>
-  
+
     SSLEngine on
     SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
     SSLCertificateFile    /etc/pki/tls/certs/localhost.crt
-  
+
     ErrorLog logs/ssl_error_log
     CustomLog logs/ssl_access_log combined
-  
+
   </VirtualHost>
   EOF
 fi
@@ -130,16 +130,16 @@ mysqladmin -uroot password $MYSQL_ROOT_PASS
 
 # Setup mail, if container started with "-e WITH_MAIL=true"
 
-if [[ -z ${_WITH_MAIL} == "true" ]] ; then
+if [[ ${_WITH_MAIL} == "true" ]] ; then
   if [[ -z ${_DOMAIN} ]] ; then
     DOMAIN="${_DOMAIN}"
   else
     DOMAIN="docker.example.org"
   fi
-  
+
   SMTPSERVER=${_SMTPSERVER}
   MAILCONF='/etc/ssmtp/ssmtp.conf'
-  
+
   /bin/cat <<- EOF > $MAILCONF
   root=postmaster
   mailhub=$STMPSERVER
@@ -212,7 +212,7 @@ COMPOSER="https://getcomposer.org/installer"
 /bin/chmod 755 /var/www/html
 /usr/bin/git clone http://git.drupal.org/project/drupal.git /var/www/html
 cd /var/www/html
-/usr/bin/git checkout $(git describe --tags $(git rev-list --tags --max-count=1)) 
+/usr/bin/git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
 
 cd /
 /bin/echo "Creating /drush"

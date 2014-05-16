@@ -22,7 +22,7 @@ if [[ ${WITH_MAIL} == "true" ]] ; then
 
   /bin/cat <<- EOF > $MAILCONF
   root=postmaster
-  mailhub=$STMPSERVER
+  mailhub=$SMTPSERVER
   ReweriteDomain=$DOMAIN
   FromLineOverride=YES
   UseTLS=YES

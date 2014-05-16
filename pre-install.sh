@@ -125,37 +125,8 @@ EOF
 mysqladmin -uroot password $MYSQL_ROOT_PASS
 
 ## TO DO: Setup PHP-FPM ##
-PHPINI='/etc/php.ini'
-SENDMAIL='sendmail_path = \/usr\/sbin\/sendmail -t -i'
-SSMPTMAIL='sendmail_path = \/usr\/sbin\/ssmtp -t'
 APCINI='/etc/php.d/apc.ini'
-
-/bin/sed -i "/$SENDMAIL/c\\$SSMTPMAIL" $PHPINI
 /bin/echo 'apc.rfc1867 = 1' >> $APCINI
-
-# Setup mail, if container started with "-e WITH_MAIL=true"
-
-if [[ ${_WITH_MAIL} == "true" ]] ; then
-  if [[ -z ${_DOMAIN} ]] ; then
-    DOMAIN="${_DOMAIN}"
-  else
-    DOMAIN='docker.example.org'
-  fi
-
-  SMTPSERVER=${_SMTPSERVER}
-  MAILCONF='/etc/ssmtp/ssmtp.conf'
-
-  /bin/cat <<- EOF > $MAILCONF
-  root=postmaster
-  mailhub=$STMPSERVER
-  ReweriteDomain=$DOMAIN
-  FromLineOverride=YES
-  UseTLS=YES
-  TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
-EOF
-
-fi
-
 
 # Setup the init system
 /bin/mkdir -p /etc/service/httpd

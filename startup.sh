@@ -7,6 +7,40 @@ DB_NAME="drupal"
 DB_URL="mysql://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
 DB_DEFAULTS="/root/.my.cnf"
 
+# Setup mail, if container started with "-e WITH_MAIL=true"
+if [[ ${_WITH_MAIL} == "true" ]] ; then
+
+  if [[ -z ${_DOMAIN} ]] ; then
+    DOMAIN="${_DOMAIN}"
+  else
+    DOMAIN='docker.example.org'
+  fi
+
+  if [[ -z ${_SMTPSERVER} ]] ; then
+    SMTPSERVER=${_SMTPSERVER}
+  else
+    SMTPSERVER='smtp.docker.example.org'
+  fi
+
+  MAILCONF='/etc/ssmtp/ssmtp.conf'
+
+  /bin/cat <<- EOF > $MAILCONF
+  root=postmaster
+  mailhub=$STMPSERVER
+  ReweriteDomain=$DOMAIN
+  FromLineOverride=YES
+  UseTLS=YES
+  TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
+EOF
+
+  PHPINI='/etc/php.ini'
+  SENDMAIL='sendmail_path = \/usr\/sbin\/sendmail -t -i'
+  SSMPTMAIL='sendmail_path = \/usr\/sbin\/ssmtp -t'
+
+  /bin/sed -i "/$SENDMAIL/c\\$SSMTPMAIL" $PHPINI
+
+fi
+
 # Check to see if Drupal is already installed
 if [ ! -f "/var/www/html/sites/default/settings.php" ] ; then
   # Start MySQL for database setup

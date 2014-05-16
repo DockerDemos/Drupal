@@ -8,16 +8,16 @@ DB_URL="mysql://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
 DB_DEFAULTS="/root/.my.cnf"
 
 # Setup mail, if container started with "-e WITH_MAIL=true"
-if [[ ${_WITH_MAIL} == "true" ]] ; then
+if [[ ${WITH_MAIL} == "true" ]] ; then
 
-  if [[ -z ${_DOMAIN} ]] ; then
-    DOMAIN="${_DOMAIN}"
+  if [[ -z ${DOMAIN} ]] ; then
+    DOMAIN="${DOMAIN}"
   else
     DOMAIN='docker.example.org'
   fi
 
-  if [[ -z ${_SMTPSERVER} ]] ; then
-    SMTPSERVER=${_SMTPSERVER}
+  if [[ -z ${SMTPSERVER} ]] ; then
+    SMTPSERVER=${SMTPSERVER}
   else
     SMTPSERVER='smtp.docker.example.org'
   fi

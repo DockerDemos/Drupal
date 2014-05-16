@@ -79,27 +79,27 @@ if [[ -f /certs/localhost.crt ]] ; then
   /bin/sed -i "/SSLProtocol all -SSLv2/c\\$SSLPROTO\n$SSLHONOR" $SSLCONF
   /bin/sed -i "/SSLCipherSuite ALL/c\\$SSLCIPHER" $SSLCONF
 
-  /bin/cat << EOF > /etc/httpd/conf.d/site-ssl.conf
-<VirtualHost *:443>
-
-  DocumentRoot "/var/www/html"
-
-  <Directory "/var/www/html">
-    Options FollowSymlinks
-    AllowOverride All
-    Order allow,deny
-    Allow from all
-  </Directory>
-
-  SSLEngine on
-  SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
-  SSLCertificateFile    /etc/pki/tls/certs/localhost.crt
-
-  ErrorLog logs/ssl_error_log
-  CustomLog logs/ssl_access_log combined
-
-</VirtualHost>
-EOF
+  /bin/cat <<- EOF > /etc/httpd/conf.d/site-ssl.conf
+  <VirtualHost *:443>
+  
+    DocumentRoot "/var/www/html"
+  
+    <Directory "/var/www/html">
+      Options FollowSymlinks
+      AllowOverride All
+      Order allow,deny
+      Allow from all
+    </Directory>
+  
+    SSLEngine on
+    SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+    SSLCertificateFile    /etc/pki/tls/certs/localhost.crt
+  
+    ErrorLog logs/ssl_error_log
+    CustomLog logs/ssl_access_log combined
+  
+  </VirtualHost>
+  EOF
 fi
 
 # Setup MySQL
@@ -128,7 +128,28 @@ mysqladmin -uroot password $MYSQL_ROOT_PASS
 
 /bin/echo "apc.rfc1867 = 1" >> /etc/php.d/apc.ini
 
+# Setup mail, if container started with "-e WITH_MAIL=true"
 
+if [[ -z ${_WITH_MAIL} == "true" ]] ; then
+  if [[ -z ${_DOMAIN} ]] ; then
+    DOMAIN="${_DOMAIN}"
+  else
+    DOMAIN="docker.example.org"
+  fi
+  
+  SMTPSERVER=${_SMTPSERVER}
+  MAILCONF='/etc/ssmtp/ssmtp.conf'
+  
+  /bin/cat <<- EOF > $MAILCONF
+  root=postmaster
+  mailhub=$STMPSERVER
+  ReweriteDomain=$DOMAIN
+  FromLineOverride=YES
+  UseTLS=YES
+  TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
+  EOF
+
+fi
 
 
 # Setup the init system

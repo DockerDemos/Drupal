@@ -22,7 +22,7 @@ php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
 
 # Build the Runit RPM
-RPMUSER="rpmbuilder"
+RPMUSER='rpmbuilder'
 RPMHOME="/home/$RPMUSER"
 ARCH="$(arch)"
 
@@ -44,16 +44,16 @@ CONF='/etc/httpd/conf/httpd.conf'
 /bin/sed -i '/Timeout 60/c\Timeout 120' $CONF
 /bin/sed -i '/ServerSignature On/c\ServerSignature Off' $CONF
 
-/bin/echo "AliasMatch \.svn /non-existant-page" >> $CONF
-/bin/echo "AliasMatch \.git /non-existant-page" >> $CONF
-/bin/echo "TraceEnable Off" >> $CONF
+/bin/echo 'AliasMatch \.svn /non-existant-page' >> $CONF
+/bin/echo 'AliasMatch \.git /non-existant-page' >> $CONF
+/bin/echo 'TraceEnable Off' >> $CONF
 
 /bin/cat << EOF > /etc/httpd/conf.d/site.conf
 <VirtualHost *:80>
 
-  DocumentRoot "/var/www/html"
+  DocumentRoot '/var/www/html'
 
-  <Directory "/var/www/html">
+  <Directory '/var/www/html'>
     Options FollowSymlinks
     AllowOverride All
     Order allow,deny
@@ -67,7 +67,7 @@ CONF='/etc/httpd/conf/httpd.conf'
 EOF
 
 if [[ -f /certs/localhost.crt ]] ; then
-  /bin/echo "Certificate exists in /certs - setting up SSL"
+  /bin/echo 'Certificate exists in /certs - setting up SSL'
   /bin/cp /certs/localhost.key /etc/pki/tls/private/
   /bin/cp /certs/localhost.crt /etc/pki/tls/certs/
 
@@ -82,9 +82,9 @@ if [[ -f /certs/localhost.crt ]] ; then
   /bin/cat <<- EOF > /etc/httpd/conf.d/site-ssl.conf
   <VirtualHost *:443>
 
-    DocumentRoot "/var/www/html"
+    DocumentRoot '/var/www/html'
 
-    <Directory "/var/www/html">
+    <Directory '/var/www/html'>
       Options FollowSymlinks
       AllowOverride All
       Order allow,deny
@@ -99,7 +99,7 @@ if [[ -f /certs/localhost.crt ]] ; then
     CustomLog logs/ssl_access_log combined
 
   </VirtualHost>
-  EOF
+EOF
 fi
 
 # Setup MySQL
@@ -126,12 +126,12 @@ mysqladmin -uroot password $MYSQL_ROOT_PASS
 
 ## TO DO: Setup PHP-FPM ##
 PHPINI='/etc/php.ini'
-SENDMAIL='sendmail_path = /usr/sbin/sendmail -t -i'
-SSMPTMAIL='sendmail_path = /usr/sbin/ssmtp -t'
+SENDMAIL='sendmail_path = \/usr\/sbin\/sendmail -t -i'
+SSMPTMAIL='sendmail_path = \/usr\/sbin\/ssmtp -t'
 APCINI='/etc/php.d/apc.ini'
 
-/bin/sed -i "|$SENDMAIL|c\$SSMTPMAIL" $PHPINI
-/bin/echo "apc.rfc1867 = 1" >> $APCINI
+/bin/sed -i "/$SENDMAIL/c\\$SSMTPMAIL" $PHPINI
+/bin/echo 'apc.rfc1867 = 1' >> $APCINI
 
 # Setup mail, if container started with "-e WITH_MAIL=true"
 
@@ -139,7 +139,7 @@ if [[ ${_WITH_MAIL} == "true" ]] ; then
   if [[ -z ${_DOMAIN} ]] ; then
     DOMAIN="${_DOMAIN}"
   else
-    DOMAIN="docker.example.org"
+    DOMAIN='docker.example.org'
   fi
 
   SMTPSERVER=${_SMTPSERVER}
@@ -152,7 +152,7 @@ if [[ ${_WITH_MAIL} == "true" ]] ; then
   FromLineOverride=YES
   UseTLS=YES
   TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
-  EOF
+EOF
 
 fi
 
@@ -169,13 +169,13 @@ EOF
 
 /bin/cat << EOF > /etc/service/mysqld/run
 #!/bin/sh
-mysql="/usr/bin/mysqld_safe"
-datadir="/var/lib/mysql"
+mysql='/usr/bin/mysqld_safe'
+datadir='/var/lib/mysql'
 socketfile="\$datadir/mysql.sock"
-errlogfile="/var/log/mysqld-error.log"
-slologfile="/var/log/mysqld-slow.log"
-genlogfile="/var/log/mysqld-general.log"
-mypidfile="/var/run/mysqld/mysqld.pid"
+errlogfile='/var/log/mysqld-error.log'
+slologfile='/var/log/mysqld-slow.log'
+genlogfile='/var/log/mysqld-general.log'
+mypidfile='/var/run/mysqld/mysqld.pid'
 
 if [[ ! -f "\$errlogfile" ]] ; then
   touch "\$errlogfile" 2>/dev/null
@@ -207,27 +207,27 @@ EOF
 /bin/chown -R root.root /etc/service/
 /bin/find /etc/service/ -exec /bin/chmod a+x {} \;
 
-/bin/echo "SV:123456:respawn:/sbin/runsvdir-start" >> /etc/inittab
+/bin/echo 'SV:123456:respawn:/sbin/runsvdir-start' >> /etc/inittab
 
 # Install Drupal
-DRUSH="https://github.com/drush-ops/drush/archive/master.tar.gz"
-COMPOSER="https://getcomposer.org/installer"
+DRUSH='https://github.com/drush-ops/drush/archive/master.tar.gz'
+COMPOSER='https://getcomposer.org/installer'
 
-/bin/echo "Downloading Drupal to /var/www/html"
+/bin/echo 'Downloading Drupal to /var/www/html'
 /bin/chmod 755 /var/www/html
 /usr/bin/git clone http://git.drupal.org/project/drupal.git /var/www/html
 cd /var/www/html
 /usr/bin/git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
 
 cd /
-/bin/echo "Creating /drush"
+/bin/echo 'Creating /drush'
 /bin/mkdir /drush
 
-/bin/echo "Downloading Composer"
+/bin/echo 'Downloading Composer'
 /usr/bin/wget -nv -O - $COMPOSER | php
 /bin/mv composer.phar /usr/bin/composer
 
-/bin/echo "Downloading and extracting drush to /drush"
+/bin/echo 'Downloading and extracting drush to /drush'
 /usr/bin/wget -nv -O - $DRUSH |tar xz -C /drush --strip-components=1
 /bin/chmod u+x /drush/drush
 /bin/ln -s /drush/drush /usr/bin/drush
@@ -239,5 +239,5 @@ composer global require drush/drush:6.*
 /bin/kill -15 `cat /var/run/mysqld/mysqld.pid`
 sleep 10
 
-/bin/echo "Pre-install complete"
+/bin/echo 'Pre-install complete'
 

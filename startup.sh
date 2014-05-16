@@ -10,15 +10,11 @@ DB_DEFAULTS="/root/.my.cnf"
 # Setup mail, if container started with "-e WITH_MAIL=true"
 if [[ ${WITH_MAIL} == "true" ]] ; then
 
-  if [[ -z ${DOMAIN} ]] ; then
-    DOMAIN="${DOMAIN}"
-  else
+  if [[ ! -z ${DOMAIN} ]] ; then
     DOMAIN='docker.example.org'
   fi
 
-  if [[ -z ${SMTPSERVER} ]] ; then
-    SMTPSERVER=${SMTPSERVER}
-  else
+  if [[ ! -z ${SMTPSERVER} ]] ; then
     SMTPSERVER='smtp.docker.example.org'
   fi
 

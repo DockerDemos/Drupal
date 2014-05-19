@@ -8,6 +8,7 @@ DB_URL="mysql://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
 DB_DEFAULTS="/root/.my.cnf"
 
 # Setup mail, if container started with "-e SMTPSERVER"
+MAILCONF='/etc/ssmtp/ssmtp.conf'
 
 if [[ ! -z "${SMTPSERVER}" ]] ; then
   SMTPSERVER="${SMTPSERVER}"
@@ -17,8 +18,6 @@ if [[ ! -z "${SMTPSERVER}" ]] ; then
     DOMAIN="${DOMAIN}"
   fi
 
-  MAILCONF='/etc/ssmtp/ssmtp.conf'
-  
   /bin/cat <<- EOF > $MAILCONF
 root=postmaster
 mailhub=$SMTPSERVER:465

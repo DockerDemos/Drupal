@@ -33,7 +33,11 @@ EOF
   SSMTPMAIL='sendmail_path = \/usr\/sbin\/ssmtp -t'
 
   /bin/sed -i "/$SENDMAIL/c\\$SSMTPMAIL" $PHPINI
-fi
+
+elif [[ -f "/custom/ssmtp.conf" ]] ; then
+  # If we have a custom conf, use that instead
+  cp /custom/ssmtp.conf $MAILCONF
+fi 
 
 # Check to see if Drupal is already installed
 if [ ! -f "/var/www/html/sites/default/settings.php" ] ; then

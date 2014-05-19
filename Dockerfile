@@ -8,6 +8,7 @@ FROM centos
 MAINTAINER Chris Collins <collins.christopher@gmail.com>
 
 ADD certs/ /certs/
+ADD custom/ /custom/
 
 ADD pre-install.sh /pre-install.sh
 RUN /pre-install.sh

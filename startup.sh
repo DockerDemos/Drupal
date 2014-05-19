@@ -9,9 +9,9 @@ DB_DEFAULTS="/root/.my.cnf"
 
 # Setup mail, if container started with "-e SMTPSERVER"
 
-if [[ ! -n "${SMTPSERVER}" ]] ; then
+if [[ ! -z "${SMTPSERVER}" ]] ; then
   SMTPSERVER="${SMTPSERVER}"
-  if [[ -n "${DOMAIN}" ]] ; then
+  if [[ -z "${DOMAIN}" ]] ; then
     DOMAIN="$(echo ${SMTPSERVER} | awk -F. '{print $(NF-1)"."$NF}')"
   else
     DOMAIN="${DOMAIN}"
@@ -20,12 +20,12 @@ if [[ ! -n "${SMTPSERVER}" ]] ; then
   MAILCONF='/etc/ssmtp/ssmtp.conf'
   
   /bin/cat <<- EOF > $MAILCONF
-  root=postmaster
-  mailhub=$SMTPSERVER
-  ReweriteDomain=$DOMAIN
-  FromLineOverride=YES
-  UseTLS=YES
-  TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
+root=postmaster
+mailhub=$SMTPSERVER:465
+ReweriteDomain=$DOMAIN
+FromLineOverride=YES
+UseTLS=YES
+TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
 EOF
 
   PHPINI='/etc/php.ini'

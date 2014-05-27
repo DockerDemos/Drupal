@@ -16,7 +16,7 @@ EOF
 touch /etc/sysconfig/network
 
 /usr/bin/yum clean all
-/usr/bin/yum install -y --nogpgcheck git which pwgen cronie tar \
+/usr/bin/yum install -y --nogpgcheck git which pwgen cronie tar rsyslogd\
 httpd mod_ssl mysql-server \
 php php-fpm php-gd php-mbstring php-mysql php-pecl-apc php-xml php-zts \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
@@ -129,9 +129,15 @@ APCINI='/etc/php.d/apc.ini'
 /bin/echo 'apc.rfc1867 = 1' >> $APCINI
 
 # Setup the init system
+/bin/mkdir -p /etc/service/rsyslogd
 /bin/mkdir -p /etc/service/httpd
 /bin/mkdir -p /etc/service/mysqld
 /bin/mkdir -p /etc/service/php-fpm
+
+/bin/cat << EOF > /etc/service/rsyslogd/run
+#!/bin/sh
+exec rsyslogd -n
+EOF
 
 /bin/cat << EOF > /etc/service/httpd/run
 #!/bin/sh

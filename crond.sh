@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/bin/mkdir -p /etc/service/crond/run
+/bin/mkdir -p /etc/service/crond/
 
 /bin/cat << EOF > /etc/service/crond/run
 #!/bin/sh

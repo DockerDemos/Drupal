@@ -41,6 +41,32 @@ To make your site available to the public on port 80 and 443 of your host system
 
 The site will now be availble as a normal website if you browse to the domain name or IP of your host system.  (Make sure your host system's firewalls are open on ports 80 and 443 accordingly.)
 
+##Customizations##
+
+There are a few ways to customize your Drupal container to your environment:
+
+###HTTPS/SSL###
+
+If you want to setup SSL for your container, just copy the SSL certificate and key into the root of the image (alongside the Dockerfile).  Name them "localhost.crt" and "localhost.key", and when you run the `docker build` command, SSL will be automatically setup for you, using your cert and key.
+
+###Email###
+
+You can start your container with email delivery to a custom SMTP server by setting the SMTPSERVER environmental variable when you run the container.  Just add:
+
+`-e "SMTPSERVER=my.smtp.server"` to the flags with the `docker run` command.
+
+Optionally, you can specify:
+
+`-e "DOMAIN=my.domain"`, and the container will use "my.domain" as the SMTP server rewrite domain.  If you don't specify it, then the container will try to infer it from the SMTP server you provide.
+
+Finally, if you provide your own ssmtp.conf file in the root of the image (alongside the Dockerfile), the container will use that ssmtp.conf file instead of creating it's own.
+
+###Syslog###
+
+You can specify a Syslog server to receive log messages from the container.  Just add:
+
+`-e "SYSLOGSERVER=my.syslog.server"` to the flags with the `docker run` command.
+
 ##Known Issues##
 
 Tracked on Github: [https://github.com/DockerDemos/Drupal/issues](https://github.com/DockerDemos/Drupal/issues)

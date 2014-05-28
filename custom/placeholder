@@ -1,1 +1,0 @@
-This is a placeholder file.  Custom config files, like ssmtp.conf, placed in this folder will get copied to /custom/ on the container, and will be copied into their appropriate places if the pre-install or startup scripts are configured to use them.

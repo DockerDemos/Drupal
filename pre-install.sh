@@ -32,13 +32,5 @@ ARCH="$(arch)"
 
 /usr/bin/yum install -y /home/rpmbuilder/rpmbuild/RPMS/$ARCH/runit-2.1.1-6.el6.$ARCH.rpm
 
-# Init rsyslogd
-/bin/mkdir -p /etc/service/rsyslogd
-
-/bin/cat << EOF > /etc/service/rsyslogd/run
-#!/bin/sh
-exec rsyslogd -n
-EOF
-
 /bin/echo 'Pre-install complete'
 

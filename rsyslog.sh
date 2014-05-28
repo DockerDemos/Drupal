@@ -18,3 +18,13 @@ else
   /bin/echo "No Syslog server specified..."
   fi
 fi
+
+/bin/mkdir -p /etc/service/rsyslogd
+
+/bin/cat << EOF > /etc/service/rsyslogd/run
+#!/bin/sh
+exec rsyslogd -n
+EOF
+
+chmod -R +x /etc/service/rsyslogd
+

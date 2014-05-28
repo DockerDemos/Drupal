@@ -23,7 +23,7 @@ fi
 
 /bin/cat << EOF > /etc/service/rsyslogd/run
 #!/bin/sh
-exec rsyslogd -n
+exec /sbin/rsyslogd -n
 EOF
 
 chmod -R +x /etc/service/rsyslogd

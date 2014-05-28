@@ -15,4 +15,4 @@ RUN /build/post-install.sh
 EXPOSE 80 
 EXPOSE 443 
 
-CMD ["/bin/bash", "/startup.sh"]
+CMD ["/bin/bash", "/build/startup.sh"]

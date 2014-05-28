@@ -31,6 +31,9 @@ fi
 ## BASE CONFIGS ##
 ##################
 
+# Setup crond
+/bin/bash -x /build/crond.sh
+
 # Setup rsyslog
 /bin/bash -x /build/rsyslog.sh
 

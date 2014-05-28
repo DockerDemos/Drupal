@@ -7,13 +7,10 @@
 FROM centos
 MAINTAINER Chris Collins <collins.christopher@gmail.com>
 
-ADD certs/ /certs/
-ADD custom/ /custom/
-
-ADD pre-install.sh /pre-install.sh
-RUN /pre-install.sh
-
-ADD startup.sh /startup.sh
+ADD . /build
+RUN /build/pre-install.sh 
+RUN /build/config.sh
+RUN /build/post-install.sh
 
 EXPOSE 80 
 EXPOSE 443 

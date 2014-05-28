@@ -7,56 +7,6 @@ DB_NAME="drupal"
 DB_URL="mysql://$DB_USER:$DB_PASS@$DB_HOST/$DB_NAME"
 DB_DEFAULTS="/root/.my.cnf"
 
-f_syslog() {
-  /bin/echo '$template ExampleFormat,"%HOSTNAME%.docker %msg%"' >> /etc/rsyslog.conf
-  /bin/echo "*.* @@$SYSLOGSERVER:514;ExampleFormat" >> /etc/rsyslog.conf
-}
-
-# Setup rsyslog
-if [[ ! -z "${SYSLOGSERVER}" ]] ; then
-  SYSLOGSERVER="${SYSLOGSERVER}"
-  f_syslog
-else
-  if [[ ! -z "${DOMAIN}" ]] ; then
-  DOMAIN="${DOMAIN}"
-  SYSLOGSERVER="syslog.$DOMAIN"
-  f_syslog
-  else
-  /bin/echo "No Syslog server specified..."
-  fi
-fi
-
-# Setup mail, if container started with "-e SMTPSERVER"
-MAILCONF='/etc/ssmtp/ssmtp.conf'
-
-if [[ ! -z "${SMTPSERVER}" ]] ; then
-  SMTPSERVER="${SMTPSERVER}"
-  if [[ -z "${DOMAIN}" ]] ; then
-    DOMAIN="$(echo ${SMTPSERVER} | awk -F. '{print $(NF-1)"."$NF}')"
-  else
-    DOMAIN="${DOMAIN}"
-  fi
-
-  /bin/cat <<- EOF > $MAILCONF
-root=postmaster
-mailhub=$SMTPSERVER:465
-ReweriteDomain=$DOMAIN
-FromLineOverride=YES
-UseTLS=YES
-TLS_CA_FILE=/etc/pki/tls/certs/ca-bundle.crt
-EOF
-
-  PHPINI='/etc/php.ini'
-  SENDMAIL='sendmail_path = \/usr\/sbin\/sendmail -t -i'
-  SSMTPMAIL='sendmail_path = \/usr\/sbin\/ssmtp -t'
-
-  /bin/sed -i "/$SENDMAIL/c\\$SSMTPMAIL" $PHPINI
-
-elif [[ -f "/custom/ssmtp.conf" ]] ; then
-  # If we have a custom conf, use that instead
-  cp /custom/ssmtp.conf $MAILCONF
-fi 
-
 # Check to see if Drupal is already installed
 if [ ! -f "/var/www/html/sites/default/settings.php" ] ; then
   # Start MySQL for database setup
@@ -77,6 +27,15 @@ fi
 # Setting file permissions
 /bin/chown -R apache /var/www/html/
 
+##################
+## BASE CONFIGS ##
+##################
+
+# Setup rsyslog
+/bin/bash -x /build/rsyslog.sh
+
+# Setup ssmtp
+/bin/bash -x /build/ssmtp.sh
 
 /bin/echo "Starting init system"
 /sbin/runsvdir-start

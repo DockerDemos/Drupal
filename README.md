@@ -25,7 +25,7 @@ Once it finishes building, you can run the container with:
 
 `docker run -i -t -d -p 8080:80 drupal`
 
-Then, open your browser and navigate to [http://localhost:8080](http://localhost:8080) to your new site.
+Then, open your browser and navigate to [http://localhost:8080](http://localhost:8080) to view your new site.
 
 To get your Drupal admin password, run:
 

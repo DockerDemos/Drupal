@@ -13,7 +13,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
 EOF
 
 /usr/bin/yum clean all
-/usr/bin/yum install -y --nogpgcheck git which pwgen cronie tar rsyslogd\
+/usr/bin/yum install -y --nogpgcheck git which pwgen cronie tar rsyslogd \
 rpm-build rpmdevtools redhat-rpm-config make gcc glibc-static
 
 # Build the Runit RPM

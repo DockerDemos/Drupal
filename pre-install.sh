@@ -30,7 +30,7 @@ ARCH="$(arch)"
 /bin/su -c '/usr/bin/git clone https://github.com/imeyer/runit-rpm.git' - rpmbuilder
 /bin/su -c '/home/rpmbuilder/runit-rpm/build.sh 1>/dev/null' - rpmbuilder
 
-/usr/bin/yum install -y /home/rpmbuilder/rpmbuild/RPMS/$ARCH/runit-2.1.1-6.el6.$ARCH.rpm
+/usr/bin/yum install -y $RPMHOME/rpmbuild/RPMS/$ARCH/runit-2.1.1-6.el6.$ARCH.rpm
 
 /bin/echo 'Pre-install complete'
 

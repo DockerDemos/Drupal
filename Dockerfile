@@ -4,7 +4,7 @@
 # Build from lastest stable source code
 
 
-FROM centos
+FROM centos:centos6
 MAINTAINER Chris Collins <collins.christopher@gmail.com>
 
 ADD . /build
